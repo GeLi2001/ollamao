@@ -24,7 +24,7 @@ Supports multi-model routing, streaming, auth, logging, and Docker-based deploym
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourname/ollamao
+git clone https://github.com/GeLi2001/ollamao
 cd ollamao
 ```
 
