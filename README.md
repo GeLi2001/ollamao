@@ -159,7 +159,7 @@ If you're building something on top of **ollamao**, we'd love to see it.
 
 ```bash
 # Clone and setup
-git clone https://github.com/yourname/ollamao
+git clone https://github.com/GeLi2001/ollamao
 cd ollamao
 
 # Install dependencies with uv (super fast!)
