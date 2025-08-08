@@ -1,0 +1,25 @@
+# API keys configuration
+# Define your API keys here with names and quotas
+
+keys:
+  my-key:
+    name: "Internal Dev"
+    quota: unlimited
+    enabled: true
+
+  demo-key:
+    name: "Demo Environment"
+    quota: unlimited
+    enabled: true
+
+  # Example of disabled key
+  # old-key:
+  #   name: "Deprecated Key"
+  #   quota: unlimited
+  #   enabled: false
+
+  # Future: quota enforcement
+  # limited-key:
+  #   name: "Limited Usage Key"
+  #   quota: "1000/day"
+  #   enabled: true

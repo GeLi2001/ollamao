@@ -1,0 +1,36 @@
+# Ollama models configuration
+# Each model runs in its own Docker container with Ollama
+
+models:
+  llama3:
+    port: 11434
+    model: llama3.2:3b
+    quant: Q4_K_M
+    host: ollama-llama3  # Docker container name
+    timeout: 30
+    max_retries: 3
+
+  mistral:
+    port: 11434  # All use standard port inside container
+    model: mistral
+    quant: Q4_K_M
+    host: ollama-mistral  # Docker container name
+    timeout: 30
+    max_retries: 3
+
+  codellama:
+    port: 11434  # All use standard port inside container
+    model: codellama
+    quant: Q4_K_M
+    host: ollama-codellama  # Docker container name
+    timeout: 45
+    max_retries: 3
+
+  # Example of a larger model with different settings
+  # llama3-70b:
+  #   port: 11437
+  #   model: llama3:70b
+  #   quant: Q4_K_M
+  #   host: localhost
+  #   timeout: 120
+  #   max_retries: 2

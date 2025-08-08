@@ -1,0 +1,120 @@
+# Docker Compose configuration for ollamao
+# This sets up Ollama backends and the ollamao API proxy
+
+version: '3.8'
+
+services:
+  # Ollama backend for llama3 (internal only)
+  ollama-llama3:
+    image: ollama/ollama:latest
+    container_name: ollama-llama3
+    # No external ports - only accessible via Docker network
+    volumes:
+      - ollama-llama3-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # Ollama backend for mistral (internal only)
+  ollama-mistral:
+    image: ollama/ollama:latest
+    container_name: ollama-mistral
+    # No external ports - only accessible via Docker network
+    volumes:
+      - ollama-mistral-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # Ollama backend for codellama (internal only)
+  ollama-codellama:
+    image: ollama/ollama:latest
+    container_name: ollama-codellama
+    # No external ports - only accessible via Docker network
+    volumes:
+      - ollama-codellama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # ollamao API proxy (development)
+  ollamao:
+    build:
+      context: .
+      target: development
+    container_name: ollamao-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+      - ./.env:/app/.env
+    environment:
+      - OLLAMAO_LOG_LEVEL=INFO
+      - OLLAMAO_DEBUG=true
+      - OLLAMAO_RELOAD=true
+    depends_on:
+      ollama-llama3:
+        condition: service_healthy
+      ollama-mistral:
+        condition: service_healthy
+      ollama-codellama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+
+
+volumes:
+  ollama-llama3-data:
+    driver: local
+  ollama-mistral-data:
+    driver: local
+  ollama-codellama-data:
+    driver: local
+
+# Production configuration (simplified for now)
